@@ -3,7 +3,6 @@ import { TodoItem } from './TodoItem';
 
 type Props = {
   todos: ITodo[];
-  todo: string;
   handleComplete: (todo: ITodo) => void;
   handleDelete: (id: number) => void;
 };

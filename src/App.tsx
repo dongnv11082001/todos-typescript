@@ -4,10 +4,13 @@ import TodoList from './components/TodoList';
 import Header from './components/Header';
 import Add from './components/AddTodo';
 import { addTodo, fetchTodos, deleteTodo, completeTodo } from './API';
+import Tab from './components/Tab';
 
 function App() {
   const [todo, setTodo] = useState<string>('');
   const [todos, setTodos] = useState<ITodo[]>([]);
+  const [tab, setTab] = useState<string>('All');
+
   const refInput = useRef<HTMLInputElement>(null);
 
   const fetchAPI = async () => {
@@ -19,7 +22,8 @@ function App() {
     fetchAPI();
   }, []);
 
-  const handleSubmit = async (todo: string) => {
+  const handleSubmit = async (e: React.FormEvent, todo: string) => {
+    e.preventDefault();
     if (!todo) {
       alert('Empty todo');
       return;
@@ -58,6 +62,23 @@ function App() {
     completeTodo(todo);
   };
 
+  const handleChangeTab = (newTab: string) => {
+    setTab(newTab);
+  };
+  
+  const filteredTodos = todos.filter((todo) => {
+    switch (tab) {
+      case 'All':
+        return true;
+      case 'Uncomplete':
+        return todo.complete === false;
+      case 'Complete':
+        return todo.complete === true;
+      default:
+        return false;
+    }
+  });
+
   return (
     <div>
       <Header />
@@ -67,12 +88,14 @@ function App() {
           handleInputChange={handleInputChange}
           todo={todo}
         />
-        <TodoList
-          todo={todo}
-          todos={todos}
-          handleComplete={handleComplete}
-          handleDelete={handleDelete}
-        />
+        <Tab currentTab={tab} handleChangeTab={handleChangeTab} />
+        {todos && (
+          <TodoList
+            todos={filteredTodos}
+            handleComplete={handleComplete}
+            handleDelete={handleDelete}
+          />
+        )}
       </Container>
     </div>
   );

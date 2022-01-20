@@ -3,20 +3,20 @@ import styled from 'styled-components';
 import { PlusOutlined } from '@ant-design/icons';
 
 type Props = {
-  handleSubmit: (todo: string) => void;
+  handleSubmit: (e: React.FormEvent, todo: string) => void;
   handleInputChange: (e: React.FormEvent<HTMLInputElement>) => void;
   todo: string;
 };
 
 const AddTodo: React.FC<Props> = ({ handleSubmit, handleInputChange, todo }) => {
   return (
-    <Form>
+    <Form onSubmit={(e) => handleSubmit(e, todo)}>
       <Input
         value={todo}
         onChange={handleInputChange}
         placeholder="Your todo..."
       />
-      <Button onClick={() => handleSubmit(todo)}>
+      <Button>
         <PlusOutlined />
       </Button>
     </Form>
@@ -25,7 +25,7 @@ const AddTodo: React.FC<Props> = ({ handleSubmit, handleInputChange, todo }) => 
 
 export default AddTodo;
 
-const Form = styled.div`
+const Form = styled.form`
   display: flex;
   justify-content: space-between;
   align-items: center;
